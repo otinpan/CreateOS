@@ -8,3 +8,4 @@
 *.log
 *.pcap
 .trace-worktree/
+disk.img
