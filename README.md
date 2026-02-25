@@ -12,3 +12,7 @@ $ sudo mount -o loop disk.img mnt
 $ cat mnt/memmap
 $ sudo umount mnt
 ```
+
+```
+$ $HOME/CreateOS/osbook/devenv/run_qemu.sh Build/MikanLoaderX64/DEBUG_CLANG38/X64/Loader.efi kernel.elf
+```

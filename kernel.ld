@@ -1,7 +1,7 @@
-ENTRY(boot)
+ENTRY(KernelMain)
 
 SECTIONS {
-    . = 0x80200000;
+    . = 0x00100000;
 
     .text :{
         KEEP(*(.text.boot));
