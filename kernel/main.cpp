@@ -1,5 +1,5 @@
 #include <cstdint>
-extern "C" void KernelMain(
+extern "C" __attribute__((sysv_abi)) void KernelMain(
     uint64_t frame_buffer_base,
     uint64_t frame_buffer_size
 ){

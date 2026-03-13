@@ -2,12 +2,45 @@
 #include  <Library/UefiLib.h>
 #include  <Library/UefiBootServicesTableLib.h>
 #include  <Library/PrintLib.h>
+#include  <Library/BaseMemoryLib.h>
 #include  <Library/MemoryAllocationLib.h>
 #include  <Protocol/LoadedImage.h>
 #include  <Protocol/SimpleFileSystem.h>
 #include  <Protocol/DiskIo2.h>
 #include  <Protocol/BlockIo.h>
 #include  <Guid/FileInfo.h>
+
+typedef struct {
+  UINT8 e_ident[16];
+  UINT16 e_type;
+  UINT16 e_machine;
+  UINT32 e_version;
+  UINT64 e_entry;
+  UINT64 e_phoff;
+  UINT64 e_shoff;
+  UINT32 e_flags;
+  UINT16 e_ehsize;
+  UINT16 e_phentsize;
+  UINT16 e_phnum;
+  UINT16 e_shentsize;
+  UINT16 e_shnum;
+  UINT16 e_shstrndx;
+} Elf64_Ehdr;
+
+typedef struct {
+  UINT32 p_type;
+  UINT32 p_flags;
+  UINT64 p_offset;
+  UINT64 p_vaddr;
+  UINT64 p_paddr;
+  UINT64 p_filesz;
+  UINT64 p_memsz;
+  UINT64 p_align;
+} Elf64_Phdr;
+
+enum {
+  PT_LOAD = 1
+};
 
 struct MemoryMap {
   UINTN buffer_size;
@@ -202,12 +235,69 @@ EFI_STATUS EFIAPI UefiMain(
   EFI_FILE_INFO* file_info = (EFI_FILE_INFO*)file_info_buffer;
   UINTN kernel_file_size = file_info->FileSize;
 
-  EFI_PHYSICAL_ADDRESS kernel_base_addr = 0x100000;
-  gBS->AllocatePages(
-      AllocateAddress, EfiLoaderData,
-      (kernel_file_size + 0xfff) / 0x1000, &kernel_base_addr);
-  kernel_file->Read(kernel_file, &kernel_file_size, (VOID*)kernel_base_addr);
-  Print(L"Kernel: 0x%0lx (%lu bytes)\n", kernel_base_addr, kernel_file_size);
+  VOID* kernel_file_buf = AllocatePool(kernel_file_size);
+  if (kernel_file_buf == NULL) {
+    Print(L"failed to allocate pool for kernel file\n");
+    while (1);
+  }
+  UINTN kernel_read_size = kernel_file_size;
+  kernel_file->Read(kernel_file, &kernel_read_size, kernel_file_buf);
+  if (kernel_read_size != kernel_file_size) {
+    Print(L"failed to read kernel file\n");
+    while (1);
+  }
+
+  Elf64_Ehdr* ehdr = (Elf64_Ehdr*)kernel_file_buf;
+  if (ehdr->e_ident[0] != 0x7f || ehdr->e_ident[1] != 'E' ||
+      ehdr->e_ident[2] != 'L' || ehdr->e_ident[3] != 'F') {
+    Print(L"kernel file is not ELF\n");
+    while (1);
+  }
+
+  Elf64_Phdr* phdrs = (Elf64_Phdr*)((UINT8*)kernel_file_buf + ehdr->e_phoff);
+  UINT64 first = MAX_UINT64;
+  UINT64 last = 0;
+  for (UINTN i = 0; i < ehdr->e_phnum; ++i) {
+    if (phdrs[i].p_type != PT_LOAD) {
+      continue;
+    }
+    if (first > phdrs[i].p_vaddr) {
+      first = phdrs[i].p_vaddr;
+    }
+    UINT64 segment_last = phdrs[i].p_vaddr + phdrs[i].p_memsz;
+    if (last < segment_last) {
+      last = segment_last;
+    }
+  }
+
+  if (first == MAX_UINT64) {
+    Print(L"no loadable segment in kernel\n");
+    while (1);
+  }
+
+  first &= ~0xfffULL;
+  UINTN num_pages = (last - first + 0xfff) / 0x1000;
+  EFI_PHYSICAL_ADDRESS kernel_base_addr = first;
+  EFI_STATUS alloc_status = gBS->AllocatePages(
+      AllocateAddress, EfiLoaderData, num_pages, &kernel_base_addr);
+  if (EFI_ERROR(alloc_status)) {
+    Print(L"failed to allocate pages for kernel: %r\n", alloc_status);
+    Halt();
+  }
+
+  SetMem((VOID*)kernel_base_addr, num_pages * 0x1000, 0);
+  for (UINTN i = 0; i < ehdr->e_phnum; ++i) {
+    if (phdrs[i].p_type != PT_LOAD) {
+      continue;
+    }
+    CopyMem((VOID*)phdrs[i].p_vaddr,
+            (UINT8*)kernel_file_buf + phdrs[i].p_offset,
+            phdrs[i].p_filesz);
+  }
+  UINT64 entry_addr = ehdr->e_entry;
+  FreePool(kernel_file_buf);
+  Print(L"Kernel: 0x%0lx - 0x%0lx, entry: 0x%0lx\n",
+      first, last, entry_addr);
 
   // #@@range_begin(exit_bs)
   EFI_STATUS status;
@@ -226,10 +316,8 @@ EFI_STATUS EFIAPI UefiMain(
   }
   // #@@range_end(exit_bs)
 
-  UINT64 entry_addr = *(UINT64*)(kernel_base_addr + 24);
-
   // #@@range_begin(call_kernel)
-  typedef void EntryPointType(UINT64, UINT64);
+  typedef void __attribute__((sysv_abi)) EntryPointType(UINT64, UINT64);
   EntryPointType* entry_point = (EntryPointType*)entry_addr;
   entry_point(gop->Mode->FrameBufferBase, gop->Mode->FrameBufferSize);
   // #@@range_end(call_kernel)
@@ -238,4 +326,8 @@ EFI_STATUS EFIAPI UefiMain(
 
   while (1);
   return EFI_SUCCESS;
+}
+
+void Halt(void){
+  whle(1) __asm__("hlt");
 }
