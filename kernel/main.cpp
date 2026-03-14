@@ -1,8 +1,10 @@
 #include <cstdint>
 #include <cstddef>
+#include <cstdio>
 #include "frame_buffer_config.hpp"
 #include "graphics.hpp"
 #include "font.hpp"
+#include "console.hpp"
 
 void* operator new(size_t size,void* buf){
   return buf;
@@ -14,6 +16,24 @@ void operator delete(void* obj) noexcept{
 
 char pixel_writer_buf[sizeof(RGBResv8BitPerColorPixelWriter)];
 PixelWriter* pixel_writer;
+
+char console_buf[sizeof(Console)];
+Console* console;
+
+// 可変長引数
+int printk(const char* format,...){
+  va_list ap;
+  int result;
+  char s[1024];
+
+  // 引数取得
+  va_start(ap,format);
+  result = vsprintf(s,format,ap);
+  va_end(ap);
+
+  console->PutString(s);
+  return result;
+}
 
 extern "C" void KernelMain(
     const FrameBufferConfig& frame_buffer_config
@@ -40,7 +60,11 @@ extern "C" void KernelMain(
     }
   }
 
-  WriteAscii(*pixel_writer,50,50,'A',{0,0,0});
-  WriteAscii(*pixel_writer,58,50,'A',{0,0,0});
+  console=new(console_buf) Console{*pixel_writer,{0,0,0},{255,255,255}};
+  
+  for(int i=0;i<27;i++){
+    printk("printk: %d\n",i);
+  }
+
   while (1) __asm__("hlt");
 }
