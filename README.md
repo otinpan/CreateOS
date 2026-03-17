@@ -48,3 +48,24 @@ $ source edksetup.sh
 $ build -p MikanLoaderPkg/MikanLoaderPkg.dsc -a X64 -t CLANG38
 $ $HOME/CreateOS/osbook/devenv/run_qemu.sh Build/MikanLoaderX64/DEBUG_CLANG38/X64/Loader.efi $HOME/CreateOS/kernel/kernel.elf
 ```
+
+### ScanBus
+```
+ScanAllBus
+  ↓
+ScanBus(bus)
+  ↓
+device = 0..31 を調べる
+  ↓
+ScanDevice(bus, device)
+  ↓
+function 0 を調べる
+  ↓
+多機能なら function 1..7 も調べる
+  ↓
+ScanFunction(bus, device, function)
+  ↓
+devices[] に登録
+  ↓
+PCI-PCI bridge なら secondary bus を再帰的に ScanBus
+```
