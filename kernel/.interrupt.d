@@ -1,8 +1,6 @@
-pci.o: pci.cpp pci.hpp \
-  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/cstdint \
-  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__config \
-  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/stdint.h \
+interrupt.o: interrupt.cpp interrupt.hpp \
   /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/array \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__config \
   /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__tuple \
   /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/cstddef \
   /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/version \
@@ -11,6 +9,8 @@ pci.o: pci.cpp pci.hpp \
   /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/initializer_list \
   /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/cstring \
   /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/string.h \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/cstdint \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/stdint.h \
   /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__debug \
   /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/iterator \
   /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/iosfwd \
@@ -30,6 +30,4 @@ pci.o: pci.cpp pci.hpp \
   /home/hase/osbook/devenv/x86_64-elf/include/assert.h \
   /home/hase/osbook/devenv/x86_64-elf/include/_ansi.h \
   /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/functional \
-  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/bit error.hpp \
-  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/cstdio \
-  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/stdio.h asmfunc.h
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/bit
