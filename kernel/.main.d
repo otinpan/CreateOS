@@ -41,10 +41,13 @@ main.o: main.cpp \
   frame_buffer_config.hpp graphics.hpp mouse.hpp font.hpp console.hpp \
   pci.hpp /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/array \
   error.hpp logger.hpp queue.hpp segment.hpp x86_descriptor.hpp \
-  paging.hpp memory_manager.hpp usb/memory.hpp usb/device.hpp \
-  usb/setupdata.hpp usb/endpoint.hpp usb/arraymap.hpp \
-  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/optional \
-  usb/classdriver/mouse.hpp usb/classdriver/hid.hpp \
+  paging.hpp memory_manager.hpp window.hpp \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/optional layer.hpp \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/map \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__tree \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__node_handle \
+  usb/memory.hpp usb/device.hpp usb/setupdata.hpp usb/endpoint.hpp \
+  usb/arraymap.hpp usb/classdriver/mouse.hpp usb/classdriver/hid.hpp \
   usb/classdriver/base.hpp usb/xhci/xhci.hpp usb/xhci/registers.hpp \
   register.hpp usb/xhci/context.hpp usb/xhci/ring.hpp usb/xhci/trb.hpp \
   usb/xhci/port.hpp usb/xhci/devmgr.hpp usb/xhci/device.hpp \
