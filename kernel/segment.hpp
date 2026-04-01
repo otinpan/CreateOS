@@ -1,3 +1,9 @@
+/**
+ * @file segment.hpp
+ *
+ * セグメンテーション用のプログラムを集めたファイル．
+ */
+
 #pragma once
 
 #include <array>
@@ -23,7 +29,6 @@ union SegmentDescriptor {
     uint64_t base_high : 8;
   } __attribute__((packed)) bits;
 } __attribute__((packed));
-// #@@range_end(segment_desc_definition)
 
 void SetCodeSegment(SegmentDescriptor& desc,
                     DescriptorType type,

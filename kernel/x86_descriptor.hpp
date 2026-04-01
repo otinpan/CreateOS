@@ -1,3 +1,9 @@
+/**
+ * @file x86_descriptor.hpp
+ *
+ * セグメントと割り込みディスクリプタのための共通定義を集めたファイル．
+ */
+
 #pragma once
 
 enum class DescriptorType {
