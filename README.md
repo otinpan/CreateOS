@@ -86,3 +86,21 @@ alloc_map_[0] → フレーム 0〜63
 alloc_map_[1] → フレーム 64〜127
 alloc_map_[2] → フレーム 128〜191
 ```
+
+### マウス描画
+重ね合わせ処理をする。
+```
+layer_manager
+|
+[layer]
+|
+window (shared_ptr)
+```
+という関係になっている。
+```
+for(layer:layer_manager->GetLayer()){
+    layer->draw();
+}
+```
+みたいにすると全てのlayerに対して毎フレーム描画することになり、これは遅延の原因になる。そこで、windowの`transeparent_color_`に値が入っている場合は、再描画する必要があるとみなし、再描画する。それ以外のwindowについては、memcopyでshadow_bufferを描画領域にコピーする。これは背景レイヤーとマウスレイヤーが別々のwindowを所有しているからできる。
+
