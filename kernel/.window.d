@@ -1,0 +1,43 @@
+window.o: window.cpp window.hpp \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/vector \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__config \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/iosfwd \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/wchar.h \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__bit_reference \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/bit \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/version \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/algorithm \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/initializer_list \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/cstddef \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/type_traits \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/cstring \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/string.h \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/utility \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__tuple \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/cstdint \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/stdint.h \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__debug \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/memory \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/typeinfo \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/exception \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/cstdlib \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/stdlib.h \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/new \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/limits \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/iterator \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__functional_base \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/tuple \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/stdexcept \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/cassert \
+  /home/hase/osbook/devenv/x86_64-elf/include/assert.h \
+  /home/hase/osbook/devenv/x86_64-elf/include/_ansi.h \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/functional \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/climits \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/limits.h \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/__split_buffer \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/optional \
+  graphics.hpp frame_buffer_config.hpp frame_buffer.hpp error.hpp \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/cstdio \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/stdio.h \
+  /home/hase/osbook/devenv/x86_64-elf/include/c++/v1/array logger.hpp \
+  font.hpp
