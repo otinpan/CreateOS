@@ -120,3 +120,29 @@ console
 window -> Move({0,0},width,height) 
 ```
 を行う。Moveではshadow_bufferを上下の方向にずらし、memcpyする。
+
+### window
+window(`main_window`)を作成し、whileのカウントを表示する。シンプルに実装するなら、毎フレームごとに全windowを再表示すればよい。しかし、そうすると背景のwindowも再表示されるため、ちらちらして見える。そこで、`layer_manager`の`draw`を指定した部分だけ描画するように改造する。
+```cpp
+void LayerManager::Draw(const Rectangle<int>& area) const {
+  for (auto layer : layer_stack_) {
+    layer->DrawTo(*screen_, area);
+  }
+}
+
+void LayerManager::Draw(unsigned int id) const {
+  bool draw = false;
+  Rectangle<int> window_area;
+  for (auto layer : layer_stack_) {
+    if (layer->ID() == id) {
+      window_area.size = layer->GetWindow()->Size();
+      window_area.pos = layer->GetPosition();
+      draw = true;
+    }
+    if (draw) {
+      layer->DrawTo(*screen_, window_area);
+    }
+  }
+}
+```
+`main_window->LayerID()`に引数を設定することでmain_windowより上のレイヤを描画できる。
