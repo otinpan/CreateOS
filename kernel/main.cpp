@@ -50,6 +50,12 @@ int printk(const char* format, ...) {
   result = vsprintf(s, format, ap);
   va_end(ap);
 
+  StartLAPICTimer();
+  console->PutString(s);
+  auto elapsed = LAPICTimerElapsed();
+  StopLAPICTimer();
+
+  sprintf(s, "[%9d]", elapsed);
   console->PutString(s);
   return result;
 }
@@ -262,15 +268,16 @@ extern "C" void KernelMainNewStack(
       kFrameWidth, kFrameHeight, frame_buffer_config.pixel_format);
   auto bgwriter = bgwindow->Writer();
 
+  // #@@range_begin(set_window)
   DrawDesktop(*bgwriter);
-  console->SetWriter(bgwriter);
+  console->SetWindow(bgwindow);
+  // #@@range_end(set_window)
 
   auto mouse_window = std::make_shared<Window>(
       kMouseCursorWidth, kMouseCursorHeight, frame_buffer_config.pixel_format);
   mouse_window->SetTransparentColor(kMouseTransparentColor);
   DrawMouseCursor(mouse_window->Writer(), {0, 0});
 
-  // #@@range_begin(create_screen)
   FrameBuffer screen;
   if (auto err = screen.Initialize(frame_buffer_config)) {
     Log(kError, "failed to initialize frame buffer: %s at %s:%d\n",
@@ -279,7 +286,6 @@ extern "C" void KernelMainNewStack(
 
   layer_manager = new LayerManager;
   layer_manager->SetWriter(&screen);
-  // #@@range_end(create_screen)
 
   auto bglayer_id = layer_manager->NewLayer()
     .SetWindow(bgwindow)

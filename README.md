@@ -87,8 +87,7 @@ alloc_map_[1] → フレーム 64〜127
 alloc_map_[2] → フレーム 128〜191
 ```
 
-### マウス描画
-重ね合わせ処理をする。
+### 重ね合わせ処理
 ```
 layer_manager
 |
@@ -103,4 +102,21 @@ for(layer:layer_manager->GetLayer()){
 }
 ```
 みたいにすると全てのlayerに対して毎フレーム描画することになり、これは遅延の原因になる。そこで、windowの`transeparent_color_`に値が入っている場合は、再描画する必要があるとみなし、再描画する。それ以外のwindowについては、memcopyでshadow_bufferを描画領域にコピーする。これは背景レイヤーとマウスレイヤーが別々のwindowを所有しているからできる。
-
+```
+layer_manager
+|
+[layer]
+|
+window
+|
+shadow_buffer
+|
+memcpy
+```
+スクロールのとき、consoleを全て一度塗りなすような処理は、処理が重い。そこで、2行目から最終行までを画像として1行分上にずらし、最終行だけ背景色で塗りつぶすことにする。具体的には
+```
+console
+|
+window -> Move({0,0},width,height) 
+```
+を行う。Moveではshadow_bufferを上下の方向にずらし、memcpyする。
